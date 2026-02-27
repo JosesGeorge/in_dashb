@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INZORA-X — Cross-Sectoral Emergency Preparedness & Response System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #060d1a;
+    --paper: #f0f4f8;
+    --accent: #e63946;
+    --accent2: #00b4d8;
+    --accent3: #06d6a0;
+    --mid: #0d1f35;
+    --muted: #5c6b7e;
+    --border: rgba(6,13,26,0.1);
+    --dark-border: rgba(255,255,255,0.08);
+  }
+
+  /* Better touch interactions */
+  a, button, .team-link, .nav-cta, .btn-primary, .btn-ghost, .btn-accent2, .btn-outline-dark {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Ensure minimum touch target size on mobile */
+  @media (max-width: 900px) {
+    a, button, .nav-links a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  html { 
+    scroll-behavior: smooth; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+  }
+  
+  /* Prevent horizontal scroll */
+  * { 
+    max-width: 100%;
+  }
+  
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Custom cursor - only on non-touch devices */
+  @media (hover: hover) and (pointer: fine) {
+    body { cursor: none; }
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--accent); border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      display: block;
+    }
+    .cursor-ring {
+      width: 40px; height: 40px;
+      border: 1.5px solid var(--accent); border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: all 0.15s ease; opacity: 0.5;
+      display: block;
+    }
+  }
+  @media (hover: none) or (pointer: coarse) {
+    .cursor, .cursor-ring { display: none; }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 3rem;
+    background: rgba(6,13,26,0.94);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--dark-border);
+  }
+  .logo {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem;
+    letter-spacing: -0.04em; color: #fff; text-decoration: none;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .logo-x { color: var(--accent); }
+  .logo-badge {
+    font-size: 0.52rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent2); border: 1px solid var(--accent2);
+    padding: 0.2rem 0.45rem; border-radius: 4px; align-self: center; margin-top: 2px;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 500;
+    color: rgba(255,255,255,0.45); text-decoration: none;
+    letter-spacing: 0.02em; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta {
+    background: var(--accent); color: white !important;
+    padding: 0.55rem 1.3rem; border-radius: 100px;
+    font-weight: 600; font-size: 0.82rem; text-decoration: none; transition: all 0.2s;
+  }
+  .nav-cta:hover { transform: scale(1.04); filter: brightness(1.1); }
+
+  /* Mobile Menu Toggle */
+  .nav-toggle {
+    display: none; background: none; border: none;
+    flex-direction: column; gap: 5px; cursor: pointer;
+    padding: 8px; z-index: 101;
+  }
+  .nav-toggle span {
+    width: 24px; height: 2px; background: white;
+    transition: all 0.3s; display: block;
+  }
+  .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(7px, 7px); }
+  .nav-toggle.active span:nth-child(2) { opacity: 0; }
+  .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; background: var(--ink);
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; padding: 8rem 3rem 5rem;
+    position: relative; overflow: hidden; gap: 4rem;
+  }
+  .hero-bg-glow {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 80% 50%, rgba(0,180,216,0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 10% 60%, rgba(230,57,70,0.08) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 50% 10%, rgba(6,214,160,0.05) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.3);
+    color: var(--accent); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 2rem;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--accent); border-radius: 50%;
+    display: inline-block;
+    animation: blink 1.4s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.8rem, 4.5vw, 5rem);
+    line-height: 0.96; letter-spacing: -0.04em; color: #fff; margin-bottom: 1.5rem;
+  }
+  .hero h1 .line-accent { color: var(--accent); }
+  .hero h1 .line-blue { color: var(--accent2); }
+  .hero-desc {
+    font-size: 1rem; line-height: 1.7; color: rgba(255,255,255,0.5);
+    max-width: 500px; margin-bottom: 2.5rem; font-weight: 300;
+  }
+  .hero-actions { 
+    display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; 
+  }
+  @media (max-width: 600px) {
+    .hero-actions { 
+      flex-direction: column; 
+      width: 100%; 
+      gap: 0.8rem; 
+    }
+    .hero-actions > * { 
+      width: 100%; 
+      justify-content: center; 
+    }
+  }
+  .btn-primary {
+    background: var(--accent); color: white;
+    padding: 0.85rem 2rem; border-radius: 100px;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    transition: all 0.25s; box-shadow: 0 8px 24px rgba(230,57,70,0.35);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+  .btn-ghost {
+    color: rgba(255,255,255,0.55); font-weight: 500; font-size: 0.92rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: all 0.2s; justify-content: center;
+  }
+  .btn-ghost:hover { color: #fff; gap: 0.9rem; }
+  .btn-ghost::after { content: '→'; }
+
+  /* Dashboard Mock */
+  .hero-visual { position: relative; z-index: 1; }
+  .dashboard-mock {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--dark-border); border-radius: 20px; overflow: hidden;
+  }
+  .dash-header {
+    background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--dark-border);
+    padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+  }
+  .dash-title { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700; color: #fff; }
+  .dash-dots { display: flex; gap: 6px; }
+  .dash-dots span { width: 9px; height: 9px; border-radius: 50%; }
+  .d1 { background: var(--accent); } .d2 { background: #f59e0b; } .d3 { background: var(--accent3); }
+  .dash-body { padding: 1.2rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .dash-alerts { display: flex; flex-direction: column; gap: 0.5rem; }
+  .alert-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--dark-border);
+    border-radius: 10px; padding: 0.7rem 1rem;
+    animation: alertPulse 3s ease-in-out infinite;
+  }
+  .dash-alerts .alert-row:nth-child(2) { animation-delay: 1s; }
+  .dash-alerts .alert-row:nth-child(3) { animation-delay: 2s; }
+  @keyframes alertPulse { 0%,100%{opacity:0.65;} 50%{opacity:1;} }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .alert-dot.red { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .alert-dot.yellow { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+  .alert-dot.green { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
+  .alert-label { font-size: 0.77rem; color: rgba(255,255,255,0.7); flex: 1; }
+  .alert-time { font-size: 0.68rem; color: rgba(255,255,255,0.3); font-family: monospace; }
+  .dash-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem; }
+  .d-metric {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--dark-border);
+    border-radius: 10px; padding: 0.8rem; text-align: center;
+  }
+  .d-metric strong {
+    display: block; font-family: 'Syne', sans-serif;
+    font-size: 1.4rem; font-weight: 800; line-height: 1.1;
+  }
+  .d-metric strong.red { color: var(--accent); }
+  .d-metric strong.blue { color: var(--accent2); }
+  .d-metric strong.green { color: var(--accent3); }
+  .d-metric span { font-size: 0.65rem; color: rgba(255,255,255,0.3); }
+  .dash-map {
+    background: rgba(0,180,216,0.05); border: 1px solid rgba(0,180,216,0.15);
+    border-radius: 10px; padding: 1rem; position: relative;
+    overflow: hidden; height: 86px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dash-map::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,180,216,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,180,216,0.07) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .map-ping {
+    position: absolute; width: 10px; height: 10px;
+    border-radius: 50%; animation: ping 2s infinite;
+  }
+  .map-ping.p1 { background: var(--accent); left: 22%; top: 38%; }
+  .map-ping.p2 { background: var(--accent2); left: 50%; top: 55%; animation-delay: 0.7s; }
+  .map-ping.p3 { background: var(--accent3); left: 72%; top: 30%; animation-delay: 1.4s; }
+  @keyframes ping {
+    0% { transform: scale(1); opacity: 1; }
+    60% { transform: scale(2.8); opacity: 0; }
+    61% { transform: scale(1); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .map-label {
+    position: relative; z-index: 1; font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: rgba(0,180,216,0.55);
+  }
+
+  /* MARQUEE */
+  .marquee-wrap { 
+    background: var(--accent); 
+    padding: 0.85rem 0; 
+    overflow: hidden; 
+    will-change: auto;
+  }
+  .marquee-track {
+    display: flex; gap: 3rem; 
+    animation: marquee 22s linear infinite; 
+    width: max-content;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation-duration: 40s; }
+  }
+  @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  .marquee-item {
+    font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.85); white-space: nowrap;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .marquee-item .dot { color: rgba(255,255,255,0.35); }
+
+  /* STATS BAND */
+  .stats-band {
+    background: var(--mid); padding: 4rem 3rem;
+    display: grid; grid-template-columns: repeat(4,1fr);
+  }
+  .stat-item { padding: 2rem; text-align: center; border-right: 1px solid var(--dark-border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-item strong {
+    display: block; font-family: 'Syne', sans-serif;
+    font-size: 2.5rem; font-weight: 800; line-height: 1; margin-bottom: 0.5rem;
+  }
+  .stat-item strong.red { color: var(--accent); }
+  .stat-item strong.blue { color: var(--accent2); }
+  .stat-item strong.green { color: var(--accent3); }
+  .stat-item strong.white { color: #fff; }
+  .stat-item p { font-size: 0.82rem; color: rgba(255,255,255,0.35); line-height: 1.45; }
+
+  /* SECTIONS */
+  section { padding: 7rem 3rem; }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent2); margin-bottom: 1rem; display: block;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    line-height: 1.06; letter-spacing: -0.03em; margin-bottom: 1.2rem;
+  }
+  .section-desc { font-size: 1rem; line-height: 1.75; color: var(--muted); max-width: 560px; font-weight: 300; }
+
+  /* PROBLEM */
+  .problem-section { background: var(--ink); color: #fff; }
+  .problem-section .section-tag { color: var(--accent); }
+  .problem-section .section-title { color: #fff; }
+  .problem-section .section-desc { color: rgba(255,255,255,0.42); }
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 4rem; }
+  .silo-diagram { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .silo {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--dark-border);
+    border-radius: 14px; padding: 1.5rem 1rem; text-align: center;
+  }
+  .silo .silo-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+  .silo .silo-name {
+    font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700;
+    color: rgba(255,255,255,0.6); letter-spacing: 0.05em;
+  }
+  .vs-label {
+    text-align: center; margin: 1.5rem 0 0.5rem;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: rgba(255,255,255,0.18);
+  }
+  .unified-box {
+    background: rgba(0,180,216,0.08); border: 1px solid rgba(0,180,216,0.22);
+    border-radius: 14px; padding: 1.2rem; text-align: center;
+  }
+  .unified-box .u-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--accent2); }
+  .unified-box p { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 0.3rem; }
+  .problem-points { display: flex; flex-direction: column; gap: 1.5rem; }
+  .problem-point { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .pp-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: rgba(230,57,70,0.1); border: 1px solid rgba(230,57,70,0.2);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  }
+  .problem-point h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: #fff; margin-bottom: 0.3rem; }
+  .problem-point p { font-size: 0.85rem; color: rgba(255,255,255,0.38); line-height: 1.6; }
+
+  /* ARCHITECTURE */
+  .arch-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; margin-top: 4rem; }
+  .arch-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem; position: relative;
+    overflow: hidden; transition: all 0.35s;
+  }
+  .arch-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .arch-card.robots::before { background: var(--accent); }
+  .arch-card.iot::before { background: var(--accent2); }
+  .arch-card.comm::before { background: #f59e0b; }
+  .arch-card.ai::before { background: var(--accent3); }
+  .arch-card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(0,0,0,0.08); }
+  .arch-layer {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1rem; display: block;
+  }
+  .arch-icon { font-size: 2.2rem; margin-bottom: 1rem; display: block; }
+  .arch-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.75rem; }
+  .arch-card p { font-size: 0.88rem; line-height: 1.65; color: var(--muted); }
+  .arch-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+  .arch-tag { font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 100px; }
+  .arch-card.robots .arch-tag { background: rgba(230,57,70,0.1); color: var(--accent); }
+  .arch-card.iot .arch-tag { background: rgba(0,180,216,0.1); color: var(--accent2); }
+  .arch-card.comm .arch-tag { background: rgba(245,158,11,0.12); color: #d97706; }
+  .arch-card.ai .arch-tag { background: rgba(6,214,160,0.1); color: #059669; }
+
+  /* FEATURES */
+  .features-section { background: #e6ecf3; }
+  .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 4rem; }
+  .feat-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem; transition: all 0.3s;
+  }
+  .feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.06); }
+  .feat-num { font-family:'Syne',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.1em; color:rgba(0,0,0,0.14); margin-bottom:1.5rem; display:block; }
+  .feat-icon { width:50px; height:50px; border-radius:14px; font-size:1.5rem; display:flex; align-items:center; justify-content:center; margin-bottom:1.2rem; }
+  .feat-icon.red { background: rgba(230,57,70,0.1); }
+  .feat-icon.blue { background: rgba(0,180,216,0.1); }
+  .feat-icon.green { background: rgba(6,214,160,0.1); }
+  .feat-card h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; margin-bottom:0.6rem; }
+  .feat-card p { font-size:0.88rem; color:var(--muted); line-height:1.65; }
+
+  /* METRICS */
+  .metrics-section { background: var(--ink); color: #fff; }
+  .metrics-section .section-tag { color: var(--accent); }
+  .metrics-section .section-title { color: #fff; }
+  .metrics-section .section-desc { color: rgba(255,255,255,0.38); }
+  .metrics-grid {
+    display: grid; grid-template-columns: repeat(2,1fr); gap: 1px;
+    background: var(--dark-border); border: 1px solid var(--dark-border);
+    border-radius: 20px; overflow: hidden; margin-top: 4rem;
+  }
+  .metric-cell {
+    background: rgba(255,255,255,0.03); padding: 2.5rem;
+    position: relative; overflow: hidden; transition: background 0.3s;
+  }
+  .metric-cell:hover { background: rgba(255,255,255,0.05); }
+  .metric-cell::before {
+    content: attr(data-bg); position: absolute; right: 1.5rem; top: 50%;
+    transform: translateY(-50%); font-family: 'Syne', sans-serif;
+    font-size: 5rem; font-weight: 800; color: rgba(255,255,255,0.025);
+    line-height: 1; pointer-events: none; white-space: nowrap;
+  }
+  .metric-label { font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.28); margin-bottom:0.8rem; display:block; }
+  .metric-value { font-family:'Syne',sans-serif; font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:0.5rem; letter-spacing:-0.03em; }
+  .metric-value.red { color: var(--accent); }
+  .metric-value.blue { color: var(--accent2); }
+  .metric-value.green { color: var(--accent3); }
+  .metric-value.white { color: #fff; }
+  .metric-desc { font-size:0.87rem; color:rgba(255,255,255,0.32); line-height:1.55; }
+
+  /* SCENARIO */
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), #f59e0b, var(--accent3));
+  }
+  .tl-step { position: relative; margin-bottom: 2.5rem; padding-left: 2.5rem; }
+  .tl-step:last-child { margin-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -2rem; width: 16px; height: 16px;
+    border-radius: 50%; border: 3px solid var(--paper); top: 4px;
+    box-sizing: content-box;
+  }
+  .tl-dot.red { background: var(--accent); box-shadow: 0 0 0 4px rgba(230,57,70,0.2); }
+  .tl-dot.blue { background: var(--accent2); box-shadow: 0 0 0 4px rgba(0,180,216,0.2); }
+  .tl-dot.yellow { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245,158,11,0.2); }
+  .tl-dot.green { background: var(--accent3); box-shadow: 0 0 0 4px rgba(6,214,160,0.2); }
+  .tl-phase { font-size:0.68rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.4rem; display:block; }
+  .tl-phase.red { color: var(--accent); } .tl-phase.blue { color: var(--accent2); }
+  .tl-phase.yellow { color: #d97706; } .tl-phase.green { color: var(--accent3); }
+  .tl-step h4 { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; margin-bottom:0.5rem; }
+  .tl-step p { font-size:0.88rem; color:var(--muted); line-height:1.65; }
+
+  /* TEAM */
+  .team-section { background: var(--ink); color: #fff; }
+  .team-section .section-tag { color: var(--accent3); }
+  .team-section .section-title { color: #fff; }
+  .team-section .section-desc { color: rgba(255,255,255,0.38); }
+
+  .team-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .team-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--dark-border);
+    border-radius: 20px; padding: 2rem;
+    text-align: center; position: relative;
+    overflow: hidden; transition: all 0.35s;
+  }
+  .team-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.76,0,0.24,1);
+  }
+  .team-card.c1::before { background: var(--accent); }
+  .team-card.c2::before { background: var(--accent2); }
+  .team-card.c3::before { background: var(--accent3); }
+  .team-card.c4::before { background: #f59e0b; }
+  .team-card:hover::before { transform: scaleX(1); }
+  .team-card:hover {
+    background: rgba(255,255,255,0.07);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+
+  .team-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    margin: 0 auto 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.4rem; color: white; position: relative;
+  }
+  .team-card.c1 .team-avatar { background: linear-gradient(135deg, var(--accent), #ff7b54); }
+  .team-card.c2 .team-avatar { background: linear-gradient(135deg, var(--accent2), #0077a8); }
+  .team-card.c3 .team-avatar { background: linear-gradient(135deg, var(--accent3), #00a876); }
+  .team-card.c4 .team-avatar { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+  .team-name {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1rem; color: #fff; margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+  .team-role {
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3); margin-bottom: 1.5rem;
+  }
+
+  .team-divider {
+    height: 1px; background: var(--dark-border); margin-bottom: 1.2rem;
+  }
+
+  .team-links {
+    display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+  }
+  .team-link {
+    display: flex; align-items: center; gap: 0.45rem;
+    font-size: 0.78rem; font-weight: 600;
+    color: rgba(255,255,255,0.4); text-decoration: none;
+    padding: 0.4rem 0.85rem; border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .team-link svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+  .team-link.github:hover { border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.06); }
+  .team-link.linkedin:hover { border-color: #0a66c2; color: #5baee8; background: rgba(10,102,194,0.1); }
+
+  .arch-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 4rem; }
+
+  /* CTA */
+  .cta-section {
+    background: var(--mid); padding: 7rem 3rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: 'INZORA-X'; position: absolute;
+    font-family: 'Syne', sans-serif; font-size: 16vw; font-weight: 800;
+    color: rgba(255,255,255,0.025); top: 50%; left: 50%;
+    transform: translate(-50%,-50%); white-space: nowrap; letter-spacing: -0.05em; pointer-events: none;
+  }
+  .cta-section .section-tag { color: var(--accent2); position: relative; }
+  .cta-section .section-title { color: #fff; position: relative; margin: 0 auto 1.2rem; }
+  .cta-section .section-desc { color: rgba(255,255,255,0.38); position: relative; margin: 0 auto 2.5rem; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+  .btn-accent2 {
+    background: var(--accent2); color: white;
+    padding: 0.9rem 2.2rem; border-radius: 100px;
+    font-weight: 700; font-size: 0.92rem; text-decoration: none;
+    transition: all 0.25s; box-shadow: 0 8px 24px rgba(0,180,216,0.35);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn-accent2:hover { transform: translateY(-2px); filter: brightness(1.1); }
+  .btn-outline-dark {
+    border: 1.5px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.65);
+    padding: 0.9rem 2.2rem; border-radius: 100px;
+    font-weight: 500; font-size: 0.92rem; text-decoration: none; transition: all 0.25s;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn-outline-dark:hover { border-color: rgba(255,255,255,0.45); color: #fff; }
+
+  /* FOOTER */
+  footer { background: var(--ink); color: #fff; padding: 5rem 3rem 2rem; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+  .footer-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem;
+    letter-spacing: -0.04em; color: #fff; display: flex; align-items: center; gap: 0.2rem;
+    margin-bottom: 1rem;
+  }
+  .footer-logo .lx { color: var(--accent); }
+  .footer-tagline { font-size: 0.86rem; color: rgba(255,255,255,0.33); line-height: 1.65; max-width: 300px; margin-bottom: 1.8rem; }
+  .footer-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .f-tag { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.7rem; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.33); }
+  .footer-col h4 { font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem; color:#fff; margin-bottom:1.4rem; letter-spacing:0.06em; text-transform:uppercase; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.75rem; }
+  .footer-col ul a { font-size: 0.87rem; color: rgba(255,255,255,0.33); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul a:hover { color: #fff; }
+  .footer-bottom { border-top: 1px solid var(--dark-border); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.22); }
+  .footer-bottom a { color: var(--accent2); text-decoration: none; }
+
+  /* ANIMATIONS */
+  .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-toggle { display: flex; }
+    .nav-links {
+      position: fixed; top: 0; right: -100%; 
+      width: 280px; height: 100vh;
+      background: rgba(6,13,26,0.98); backdrop-filter: blur(20px);
+      flex-direction: column; padding: 5rem 2rem 2rem;
+      gap: 1.5rem; transition: right 0.3s ease;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+    }
+    .nav-links.active { right: 0; }
+    .nav-links a { color: rgba(255,255,255,0.7); font-size: 1rem; }
+    .nav-cta { display: inline-block; text-align: center; }
+    
+    .hero { 
+      grid-template-columns: 1fr; 
+      padding: 6rem 1.5rem 4rem; 
+      min-height: 90vh;
+    }
+    .hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
+    .hero-desc { font-size: 0.95rem; }
+    .hero-visual { display: none; }
+    
+    section { padding: 4rem 1.5rem; }
+    
+    .stats-band { 
+      grid-template-columns: 1fr; 
+      padding: 2rem 1.5rem; 
+      gap: 0;
+    }
+    .stat-item { 
+      border-right: none; 
+      border-bottom: 1px solid var(--dark-border); 
+      padding: 2rem 1rem; 
+    }
+    .stat-item:last-child { border-bottom: none; }
+    
+    .problem-grid, .scenario-grid, .arch-header { 
+      grid-template-columns: 1fr; 
+      gap: 2.5rem; 
+    }
+    
+    .silo-diagram { grid-template-columns: 1fr; gap: 0.8rem; }
+    
+    .arch-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+    .arch-card { padding: 1.5rem; }
+    
+    .features-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+    
+    .metrics-grid { grid-template-columns: 1fr; }
+    .metric-cell { padding: 2rem 1.5rem; }
+    .metric-cell::before { font-size: 3rem; }
+    
+    .team-grid { 
+      grid-template-columns: 1fr; 
+      gap: 1.2rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .footer-grid { 
+      grid-template-columns: 1fr; 
+      gap: 2.5rem; 
+    }
+    
+    .footer-bottom { 
+      flex-direction: column; 
+      text-align: center; 
+      gap: 0.5rem; 
+    }
+    
+    .cta-section { padding: 4rem 1.5rem; }
+    .cta-section::before { font-size: 24vw; }
+    .cta-actions { flex-direction: column; width: 100%; }
+    .cta-actions a { width: 100%; text-align: center; }
+    
+    .timeline { padding-left: 1.5rem; }
+    .tl-step { padding-left: 2rem; }
+    
+    .marquee-item { font-size: 0.7rem; }
+  }
+  
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1rem; }
+    .logo { font-size: 1.2rem; }
+    .logo-badge { font-size: 0.48rem; padding: 0.15rem 0.35rem; }
+    
+    .hero { padding: 5rem 1rem 3rem; }
+    .hero-badge { font-size: 0.65rem; padding: 0.35rem 0.8rem; }
+    .hero h1 { font-size: clamp(1.75rem, 9vw, 2.5rem); }
+    .hero-desc { font-size: 0.9rem; }
+    .btn-primary, .btn-accent2 { 
+      padding: 0.75rem 1.5rem; 
+      font-size: 0.88rem; 
+      width: 100%;
+      text-align: center;
+    }
+    .btn-ghost { font-size: 0.88rem; }
+    
+    section { padding: 3rem 1rem; }
+    .section-title { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+    .section-desc { font-size: 0.92rem; }
+    
+    .stats-band { padding: 1.5rem 1rem; }
+    .stat-item { padding: 1.5rem 1rem; }
+    .stat-item strong { font-size: 2rem; }
+    
+    .problem-point { gap: 1rem; flex-direction: column; text-align: center; }
+    .pp-icon { margin: 0 auto; }
+    
+    .arch-card, .feat-card { padding: 1.2rem; }
+    .arch-icon, .feat-icon { font-size: 1.8rem; }
+    
+    .dash-header { padding: 0.8rem 1rem; flex-direction: column; gap: 0.5rem; }
+    .dash-body { padding: 1rem; }
+    .alert-label { font-size: 0.72rem; }
+    .dash-metrics { grid-template-columns: 1fr; }
+    
+    .team-avatar { width: 60px; height: 60px; font-size: 1.2rem; }
+    .team-card { padding: 1.5rem; }
+    
+    .metric-cell { padding: 1.5rem 1rem; }
+    .metric-value { font-size: 2.2rem; }
+    
+    .footer-grid { gap: 2rem; }
+    .footer-logo { font-size: 1.4rem; }
+  }
+  
+  @media (min-width: 901px) and (max-width: 1200px) {
+    .hero { padding: 8rem 2rem 5rem; gap: 3rem; }
+    section { padding: 6rem 2rem; }
+    .arch-grid, .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    INZORA<span class="logo-x">-X</span>
+    <span class="logo-badge">CEPRS</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#metrics">Metrics</a></li>
+    <li><a href="#scenario">Scenario</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact" class="nav-cta">Request Demo</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Live System · Field-Tested Prototype</div>
+    <h1>
+      One Command.<br>
+      <span class="line-accent">Zero Delays.</span><br>
+      <span class="line-blue">Total Resilience.</span>
+    </h1>
+    <p class="hero-desc">INZORA-X is a Cross-Sectoral Emergency Preparedness and Response System (CEPRS) that unifies health, veterinary, and forest services into a single AI-driven command structure — with or without cellular networks.</p>
+    <div class="hero-actions">
+      <a href="#architecture" class="btn-primary">Explore the System</a>
+      <a href="#metrics" class="btn-ghost">View Performance Data</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="dashboard-mock">
+      <div class="dash-header">
+        <div class="dash-dots">
+          <span class="d1"></span><span class="d2"></span><span class="d3"></span>
+        </div>
+        <div class="dash-title">INZORA-X Unified Dashboard — LIVE</div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-alerts">
+          <div class="alert-row">
+            <div class="alert-dot red"></div>
+            <div class="alert-label">🔴 Outbreak Alert — Zone 7 · Temp +42°C, CO₂ Spike</div>
+            <div class="alert-time">00:02s</div>
+          </div>
+          <div class="alert-row">
+            <div class="alert-dot yellow"></div>
+            <div class="alert-label">🟡 Bot Unit #4 Deployed — Forest Sector NW</div>
+            <div class="alert-time">00:18s</div>
+          </div>
+          <div class="alert-row">
+            <div class="alert-dot green"></div>
+            <div class="alert-label">🟢 Health Team — En Route via AI Route #2</div>
+            <div class="alert-time">00:47s</div>
+          </div>
+        </div>
+        <div class="dash-metrics">
+          <div class="d-metric"><strong class="red">&lt;2s</strong><span>Alert Latency</span></div>
+          <div class="d-metric"><strong class="blue">92%</strong><span>AI Accuracy</span></div>
+          <div class="d-metric"><strong class="green">3</strong><span>Sectors Online</span></div>
+        </div>
+        <div class="dash-map">
+          <div class="map-ping p1"></div>
+          <div class="map-ping p2"></div>
+          <div class="map-ping p3"></div>
+          <span class="map-label">Live Ground Map · LoRa + Wi-Fi Hybrid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Emergency Response <span class="dot">✦</span></div>
+    <div class="marquee-item">AI Situational Engine <span class="dot">✦</span></div>
+    <div class="marquee-item">LoRa Offline Mesh <span class="dot">✦</span></div>
+    <div class="marquee-item">Inzora Ground Bots <span class="dot">✦</span></div>
+    <div class="marquee-item">IoT Sensor Hubs <span class="dot">✦</span></div>
+    <div class="marquee-item">Unified Command Dashboard <span class="dot">✦</span></div>
+    <div class="marquee-item">Digital Twin Drills <span class="dot">✦</span></div>
+    <div class="marquee-item">Cross-Sector Coordination <span class="dot">✦</span></div>
+    <div class="marquee-item">Emergency Response <span class="dot">✦</span></div>
+    <div class="marquee-item">AI Situational Engine <span class="dot">✦</span></div>
+    <div class="marquee-item">LoRa Offline Mesh <span class="dot">✦</span></div>
+    <div class="marquee-item">Inzora Ground Bots <span class="dot">✦</span></div>
+    <div class="marquee-item">IoT Sensor Hubs <span class="dot">✦</span></div>
+    <div class="marquee-item">Unified Command Dashboard <span class="dot">✦</span></div>
+    <div class="marquee-item">Digital Twin Drills <span class="dot">✦</span></div>
+    <div class="marquee-item">Cross-Sector Coordination <span class="dot">✦</span></div>
+  </div>
+</div>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="stat-item">
+    <strong class="red">30 → 5 min</strong>
+    <p>Response time reduced via AI-driven coordination</p>
+  </div>
+  <div class="stat-item">
+    <strong class="blue">&lt; 2 sec</strong>
+    <p>Alert latency from sensor detection to dashboard</p>
+  </div>
+  <div class="stat-item">
+    <strong class="green">92%</strong>
+    <p>Routing accuracy from the AI situational engine</p>
+  </div>
+  <div class="stat-item">
+    <strong class="white">100%</strong>
+    <p>Offline resilience tested via LoRa peer-to-peer mesh</p>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-section" id="problem">
+  <span class="section-tag">The Core Problem</span>
+  <h2 class="section-title">The Communication Gap<br>That Costs Lives</h2>
+  <p class="section-desc">During large-scale disasters, departments operate in isolation. Siloed systems lead to fragmented actions, delayed response, and preventable loss — bridging this gap in the Golden Hour is mission-critical.</p>
+
+  <div class="problem-grid">
+    <div class="problem-visual fade-up">
+      <div class="silo-diagram">
+        <div class="silo">
+          <span class="silo-icon">🏥</span>
+          <div class="silo-name">Health</div>
+        </div>
+        <div class="silo">
+          <span class="silo-icon">🌲</span>
+          <div class="silo-name">Forest</div>
+        </div>
+        <div class="silo">
+          <span class="silo-icon">🐄</span>
+          <div class="silo-name">Veterinary</div>
+        </div>
+      </div>
+      <div class="vs-label">↓  No Coordination  ·  Siloed Systems  ↓</div>
+      <div class="unified-box">
+        <div class="u-label">INZORA-X Unified Command</div>
+        <p>One AI-driven ecosystem. All three sectors. Real-time.</p>
+      </div>
+    </div>
+
+    <div class="problem-points">
+      <div class="problem-point fade-up">
+        <div class="pp-icon">⏱️</div>
+        <div>
+          <h4>The Golden Hour Problem</h4>
+          <p>The critical first 60 minutes of any disaster are the highest-value window for intervention. Delays in cross-sector coordination during this window directly increase mortality and damage rates.</p>
+        </div>
+      </div>
+      <div class="problem-point fade-up">
+        <div class="pp-icon">📡</div>
+        <div>
+          <h4>Infrastructure Collapse</h4>
+          <p>Cellular networks are frequently among the first casualties of large-scale disasters, leaving responding teams completely without real-time communication when they need it most.</p>
+        </div>
+      </div>
+      <div class="problem-point fade-up">
+        <div class="pp-icon">🗂️</div>
+        <div>
+          <h4>Fragmented Resource Allocation</h4>
+          <p>Without a unified operational view, critical resources — personnel, medical supplies, vehicles — are misallocated, duplicated, or never deployed to where they are needed most.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="arch-header">
+    <div>
+      <span class="section-tag">Technical Ecosystem</span>
+      <h2 class="section-title">Four-Layer Ground Architecture</h2>
+    </div>
+    <p class="section-desc">A robust, high-performance system optimized for ground-level durability and data integrity — engineered to operate effectively when all conventional infrastructure fails.</p>
+  </div>
+
+  <div class="arch-grid">
+    <div class="arch-card robots fade-up">
+      <span class="arch-layer">Layer 1 · Physical</span>
+      <span class="arch-icon">🤖</span>
+      <h3>Ground Robotics — Inzora Bots</h3>
+      <p>High-durability units constructed from carbon fiber and aluminum, engineered to autonomously navigate rough disaster terrain. Equipped to deliver targeted medical aid and transmit real-time situational awareness back to the command hub.</p>
+      <div class="arch-tags">
+        <span class="arch-tag">Carbon Fiber Build</span>
+        <span class="arch-tag">Autonomous Navigation</span>
+        <span class="arch-tag">Medical Payload</span>
+      </div>
+    </div>
+
+    <div class="arch-card iot fade-up">
+      <span class="arch-layer">Layer 2 · Sensing</span>
+      <span class="arch-icon">📡</span>
+      <h3>IoT & Edge Intelligence</h3>
+      <p>Distributed sensor hubs collect real-time environmental data including precise GPS coordinates, Air Quality (CO₂ concentration), and Temperature readings. Edge processing ensures data is filtered and prioritized before transmission upstream.</p>
+      <div class="arch-tags">
+        <span class="arch-tag">GPS Tracking</span>
+        <span class="arch-tag">CO₂ Monitoring</span>
+        <span class="arch-tag">Temperature</span>
+        <span class="arch-tag">Edge Processing</span>
+      </div>
+    </div>
+
+    <div class="arch-card comm fade-up">
+      <span class="arch-layer">Layer 3 · Communication</span>
+      <span class="arch-icon">🔗</span>
+      <h3>Hybrid Communication Pipeline</h3>
+      <p>A fail-safe dual-mode system: Wi-Fi/MQTT for cloud-based operations when infrastructure remains intact, and LoRa (Long Range) for direct peer-to-peer data transmission when cellular networks are unavailable or destroyed.</p>
+      <div class="arch-tags">
+        <span class="arch-tag">Wi-Fi / MQTT</span>
+        <span class="arch-tag">LoRa P2P Mesh</span>
+        <span class="arch-tag">Offline Fallback</span>
+      </div>
+    </div>
+
+    <div class="arch-card ai fade-up">
+      <span class="arch-layer">Layer 4 · Intelligence</span>
+      <span class="arch-icon">🧠</span>
+      <h3>AI Situational Engine</h3>
+      <p>An advanced logic layer performing real-time situational analysis using terrain topology, wind data, and live sensor inputs. Suggests optimal evacuation routes and resource distribution plans, validated at 92% accuracy across tested scenarios.</p>
+      <div class="arch-tags">
+        <span class="arch-tag">Route Optimization</span>
+        <span class="arch-tag">Resource Planning</span>
+        <span class="arch-tag">92% Validated</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div style="text-align:center;max-width:580px;margin:0 auto;">
+    <span class="section-tag">Key Features</span>
+    <h2 class="section-title">Built for the Field,<br>Designed for Command</h2>
+    <p class="section-desc" style="margin:0 auto;">Every interface and tool in INZORA-X is purpose-built for the pressures of active emergency response — from the command center to the field.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card fade-up">
+      <span class="feat-num">Feature · 01</span>
+      <div class="feat-icon red">🗺️</div>
+      <h3>Unified Command Dashboard</h3>
+      <p>A centralized React-based web interface providing a live operational map of all active ground units, real-time alerts, and streaming sensor data. Every responding agency shares the same synchronized operational picture simultaneously.</p>
+    </div>
+    <div class="feat-card fade-up">
+      <span class="feat-num">Feature · 02</span>
+      <div class="feat-icon blue">🖥️</div>
+      <h3>Real-Time Simulation Tool</h3>
+      <p>A digital-twin training environment where agencies run joint virtual drills across flood, forest fire, and outbreak scenarios — before a real event, so that inter-agency response is rehearsed, predictable, and muscle-memorized.</p>
+    </div>
+    <div class="feat-card fade-up">
+      <span class="feat-num">Feature · 03</span>
+      <div class="feat-icon green">📱</div>
+      <h3>Field Deployment App</h3>
+      <p>A dedicated mobile interface for doctors, forest guards, and rescue workers to instantly report incidents from the field and receive AI-generated coordinated instructions in real time, even under degraded connectivity conditions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="metrics-section" id="metrics">
+  <span class="section-tag">Validated Performance</span>
+  <h2 class="section-title">Prototype-Proven Metrics</h2>
+  <p class="section-desc">Validated through a functional prototype, demonstrating measurable superiority over traditional emergency management methods across every critical performance indicator.</p>
+  <div class="metrics-grid">
+    <div class="metric-cell fade-up" data-bg="5MIN">
+      <span class="metric-label">Response Speed</span>
+      <div class="metric-value red">&lt; 5 min</div>
+      <div class="metric-desc">Reduced from an average of 30 minutes under conventional siloed operations — a 6× improvement in emergency response initiation time across tested scenarios.</div>
+    </div>
+    <div class="metric-cell fade-up" data-bg="2s">
+      <span class="metric-label">Alert Latency</span>
+      <div class="metric-value blue">&lt; 2 sec</div>
+      <div class="metric-desc">Outbreak detection by sensor hubs triggers a command dashboard alert in under 2 seconds — end to end, across the full hybrid data pipeline.</div>
+    </div>
+    <div class="metric-cell fade-up" data-bg="92%">
+      <span class="metric-label">Navigation Accuracy</span>
+      <div class="metric-value green">92%</div>
+      <div class="metric-desc">The AI situational engine delivers 92% accuracy in route planning and resource deployment recommendations, validated across multiple disaster scenario types.</div>
+    </div>
+    <div class="metric-cell fade-up" data-bg="OK">
+      <span class="metric-label">Offline Resilience</span>
+      <div class="metric-value white">✓ Tested</div>
+      <div class="metric-desc">Peer-to-peer text data transmission via LoRa successfully validated in high-interference environments with zero cellular or internet infrastructure available.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENARIO -->
+<section id="scenario">
+  <div class="scenario-grid">
+    <div>
+      <span class="section-tag">Deployment Scenario</span>
+      <h2 class="section-title">Rapid Outbreak Response<br>in Action</h2>
+      <p class="section-desc">A step-by-step walkthrough of how INZORA-X responds to a sudden environmental anomaly — from automated detection to coordinated field team deployment in under 5 minutes.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-step fade-up">
+        <div class="tl-dot red"></div>
+        <span class="tl-phase red">Phase 1 · Detection</span>
+        <h4>Anomaly Sensed Automatically</h4>
+        <p>A ground sensor hub detects a critical environmental anomaly — a rapid temperature spike or CO₂ gas leak. Data is tagged with GPS coordinates and a timestamp, then immediately queued for transmission.</p>
+      </div>
+      <div class="tl-step fade-up">
+        <div class="tl-dot blue"></div>
+        <span class="tl-phase blue">Phase 2 · Alerting</span>
+        <h4>Dashboard Alert in Under 2 Seconds</h4>
+        <p>Sensor data is pushed instantly to the Unified Command Dashboard via the hybrid communication link — Wi-Fi/MQTT if available, LoRa if cellular is down. Command operators see a live alert within 2 seconds of detection.</p>
+      </div>
+      <div class="tl-step fade-up">
+        <div class="tl-dot yellow"></div>
+        <span class="tl-phase yellow">Phase 3 · Coordination</span>
+        <h4>All Agencies Notified within 4 Seconds</h4>
+        <p>All relevant field agencies — Health, Forest, and Veterinary — simultaneously receive an "Outbreak" push alert on their Field Deployment Apps within 4 seconds. No phone calls. No radio delays.</p>
+      </div>
+      <div class="tl-step fade-up">
+        <div class="tl-dot green"></div>
+        <span class="tl-phase green">Phase 4 · Mitigation</span>
+        <h4>AI Calculates the Optimal Response Route</h4>
+        <p>The AI Situational Engine analyzes current terrain topology and real-time wind data to calculate and broadcast the most efficient deployment route for rescue teams and Inzora Bots in the field.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-section" id="team">
+  <span class="section-tag">The People Behind It</span>
+  <h2 class="section-title">Meet the Team</h2>
+  <p class="section-desc">The engineers, researchers, and builders who designed, built, and validated the INZORA-X prototype from the ground up.</p>
+
+  <div class="team-grid">
+
+    <!-- Kalaiyarasu -->
+    <div class="team-card c1 fade-up">
+      <div class="team-avatar">KV</div>
+      <div class="team-name">Kalaiyarasu V</div>
+      <div class="team-role">Team Lead & Systems Architect</div>
+      <div class="team-divider"></div>
+      <div class="team-links">
+        <a href="https://github.com/" target="_blank" class="team-link github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/" target="_blank" class="team-link linkedin">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+
+    <!-- Joses -->
+    <div class="team-card c2 fade-up">
+      <div class="team-avatar">JG</div>
+      <div class="team-name">Joses G</div>
+      <div class="team-role">AI Engine & Backend Developer</div>
+      <div class="team-divider"></div>
+      <div class="team-links">
+        <a href="https://github.com/" target="_blank" class="team-link github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/" target="_blank" class="team-link linkedin">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+
+    <!-- Deepak -->
+    <div class="team-card c3 fade-up">
+      <div class="team-avatar">DK</div>
+      <div class="team-name">Deepak Rajan K</div>
+      <div class="team-role">IoT & Hardware Engineer</div>
+      <div class="team-divider"></div>
+      <div class="team-links">
+        <a href="https://github.com/" target="_blank" class="team-link github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/" target="_blank" class="team-link linkedin">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+
+    <!-- Afraz -->
+    <div class="team-card c4 fade-up">
+      <div class="team-avatar">AA</div>
+      <div class="team-name">Afraz Ahamed K M</div>
+      <div class="team-role">Frontend & Field App Developer</div>
+      <div class="team-divider"></div>
+      <div class="team-links">
+        <a href="https://github.com/" target="_blank" class="team-link github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/" target="_blank" class="team-link linkedin">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <span class="section-tag">Collaborate with Us</span>
+  <h2 class="section-title">Ready to Deploy<br>INZORA-X?</h2>
+  <p class="section-desc">Partner with us to bring unified, AI-driven emergency preparedness to your region or agency. Request a live system demonstration or explore integration and research opportunities.</p>
+  <div class="cta-actions">
+    <a href="mailto:contact@inzorax.io" class="btn-accent2">Request a Demo</a>
+    <a href="#architecture" class="btn-outline-dark">Explore the Architecture</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">INZORA<span class="lx">-X</span></div>
+      <p class="footer-tagline">Cross-Sectoral Emergency Preparedness and Response System (CEPRS) — bridging the communication gap across health, veterinary, and forest services when every second counts.</p>
+      <div class="footer-tags">
+        <span class="f-tag">AI-Driven</span>
+        <span class="f-tag">LoRa Resilient</span>
+        <span class="f-tag">Ground Robotics</span>
+        <span class="f-tag">Field-Tested</span>
+        <span class="f-tag">Offline-First</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>System</h4>
+      <ul>
+        <li><a href="#">Architecture Overview</a></li>
+        <li><a href="#">Ground Robotics</a></li>
+        <li><a href="#">AI Engine</a></li>
+        <li><a href="#">LoRa Network</a></li>
+        <li><a href="#">IoT Sensors</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#">Command Dashboard</a></li>
+        <li><a href="#">Simulation Tool</a></li>
+        <li><a href="#">Field App</a></li>
+        <li><a href="#">API Access</a></li>
+        <li><a href="#">Documentation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:contact@inzorax.io">contact@inzorax.io</a></li>
+        <li><a href="#">Request a Demo</a></li>
+        <li><a href="#">Research Partners</a></li>
+        <li><a href="#">Government Inquiries</a></li>
+        <li><a href="#">Press Kit</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 INZORA-X · Cross-Sectoral Emergency Preparedness & Response System. All rights reserved.</p>
+    <p>Built for <a href="#">disaster resilience</a> · Powered by AI & LoRa</p>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('active');
+    navLinks.classList.toggle('active');
+  });
+  
+  // Close menu when clicking on a link
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navToggle.classList.remove('active');
+      navLinks.classList.remove('active');
+    });
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+      navToggle.classList.remove('active');
+      navLinks.classList.remove('active');
+    }
+  });
+
+  // Custom cursor - only on non-touch devices
+  const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  
+  if (!isTouchDevice) {
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let rx = 0, ry = 0, mx = 0, my = 0;
+    
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    });
+    
+    function animateCursor() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+  }
+
+  // Fade-up animation observer
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const siblings = Array.from(entry.target.parentElement.querySelectorAll('.fade-up'));
+        const i = siblings.indexOf(entry.target);
+        const delay = Math.min(i * 90, 300);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '-30px' });
+  
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Nav shadow on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 20 ? '0 4px 32px rgba(0,0,0,0.35)' : 'none';
+  });
+</script>
+</body>
+</html>
